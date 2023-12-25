@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import StarRating from "./lib/index";
 import { useMovies } from "./hooks/useMovies";
 import { useLocalStorageState } from "./hooks/useLocalStorageState";
+import { useKey } from "./hooks/useKey";
 
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
@@ -129,22 +130,23 @@ function MovieDetails({
     Genre: genre,
   } = movie;
 
-  useEffect(
-    function () {
-      function callback(event) {
-        if (event.key === "Escape") {
-          onCloseMovie();
-        }
-      }
+  useKey("Escape", onCloseMovie);
+  // useEffect(
+  //   function () {
+  //     function callback(event) {
+  //       if (event.key === "Escape") {
+  //         onCloseMovie();
+  //       }
+  //     }
 
-      document.addEventListener("keydown", callback);
+  //     document.addEventListener("keydown", callback);
 
-      return function () {
-        document.removeEventListener("keydown", callback);
-      };
-    },
-    [onCloseMovie]
-  );
+  //     return function () {
+  //       document.removeEventListener("keydown", callback);
+  //     };
+  //   },
+  //   [onCloseMovie]
+  // );
 
   useEffect(
     function () {
@@ -277,24 +279,30 @@ function Search({ query, setQuery }) {
   //   searchEle.focus();
   // }, []);
 
-  useEffect(
-    function () {
-      function callback(event) {
-        if (document.activeElement === inputRef.current) return;
-        if (event.key === "Enter") {
-          inputRef.current.focus();
-          setQuery("");
-        }
-      }
+  useKey("Enter", function () {
+    if (document.activeElement === inputRef.current) return;
+    inputRef.current.focus();
+    setQuery("");
+  });
 
-      document.addEventListener("keydown", callback);
+  // useEffect(
+  //   function () {
+  //     function callback(event) {
+  //       if (document.activeElement === inputRef.current) return;
+  //       if (event.key === "Enter") {
+  //         inputRef.current.focus();
+  //         setQuery("");
+  //       }
+  //     }
 
-      return function () {
-        document.removeEventListener("keydown", callback);
-      };
-    },
-    [setQuery]
-  );
+  //     document.addEventListener("keydown", callback);
+
+  //     return function () {
+  //       document.removeEventListener("keydown", callback);
+  //     };
+  //   },
+  //   [setQuery]
+  // );
 
   return (
     <input
